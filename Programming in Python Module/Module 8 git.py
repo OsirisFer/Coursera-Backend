@@ -24,21 +24,29 @@ flags (-)  # Modificadores que cambian el comportamiento de los comandos
 GIT COMMANDS:
 git init  # Inicializar un nuevo repositorio Git
 git clone <url_repositorio>  # Clonar un repositorio remoto
-git status  # Ver el estado de los archivos en el repositorio
+git status  # Ver donde estoy y el estado de los archivos en el repositorio
+git branch --show-current  # Mostrar la rama actual a la que apunto
+git rev-parse HEAD  # Mostrar a que commit estoy apuntando
 git add <nombre_archivo>  # Agregar archivos al área de preparación (staging area)
 git commit -m "mensaje"  # Confirmar los cambios con un mensaje descriptivo
-git push  # Subir los cambios al repositorio remoto
+git push  --u origin <nombre_rama>  # Subir los cambios al repositorio remoto o sino para hacerlo a  main directo es git push -u origin main
 git pull  # Descargar y fusionar cambios del repositorio remoto
 git fetch  # Descargar cambios del repositorio remoto sin fusionarlos
 git branch  # Listar, crear o eliminar ramas
-git checkout -B <nombre_rama> # Cambiar a una rama o crear una nueva rama y cambiar a ella  
+git checkout <nombre_rama>  # Sin el -b solo te mueves a la rama existente
+git checkout -B <nombre_rama> # Con el -b creas y te mueves a la rama nueva, con -B fuerzas la creación de la rama nueva
 git merge <nombre_rama>  # Fusionar una rama en la rama actual
-git log  # Ver el historial de commits
+git log  --pretty=oneline  # Ver el historial de commits en una sola línea por commit
 git remote -v  # Remote lo que hace es listar los repositorios remotos vinculados al repositorio local
+git log --merge # Ver el historial de commits con detalles de fusiones
+git diff  # Mostrar las diferencias entre archivos o commits
+git diff main..feature_branch  # Mostrar las diferencias entre dos ramas
+git blame <nombre_archivo>  # Mostrar quién modificó cada línea de un archivo
+
+
 
 El orden generalmente es: 
 git init -> git status -> git add -> git commit -> git pull -> git push
-
 
 
 
