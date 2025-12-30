@@ -9,3 +9,10 @@ print(trial.names)
 
 # for modules that are not part of the standard library, you can install them using package managers like pip.
 # Example of importing a module and using its functions
+# reload() no es muy utilizado en producción, pero es útil en desarrollo para recargar un módulo sin reiniciar el intérprete.
+
+# Packages mas conocidos
+# NumPy: Used for numerical computations and handling arrays.
+# Pandas: Used for data manipulation and analysis.
+# Matplotlib: Used for creating static, animated, and interactive visualizations in Python.
+# Scikit-learn: Used for machine learning and data mining.
