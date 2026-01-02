@@ -65,9 +65,9 @@ DCL:
     2. REVOKE ALL PRIVILEGES ON database_name FROM 'username'@'host';
 
 Las constraints son reglas aplicadas a las columnas de una tabla para asegurar la integridad de los datos. Algunos ejemplos comunes incluyen:
-    Key constraints: ej PRIMARY KEY, FOREIGN KEY
-    Domain constraints: ej NOT NULL, UNIQUE
-    Referential integrity constraints: ej FOREIGN KEY con ON DELETE CASCADE
+    Key constraints: ej PRIMARY KEY, FOREIGN KEY, aseguran que no haya filas duplicadas o que sean null
+    Domain constraints: ej NOT NULL, UNIQUE, aseguran que los tipos de datos y valores sean correctos, ej: abc en una columna INT
+    Referential integrity constraints: ej FOREIGN KEY con ON DELETE CASCADE, cohherencia entre tablas relacionadas. No puede haber un pedido con un cliente que no existe.
 
 Datatypes:
     INT: Enteros
@@ -80,14 +80,74 @@ Datatypes:
 
 SQL OPERATORS:
     Aritmeticos: +, -, *, /, %
-    Comparacion: =, !=, <, >, <=, >=
+    Comparacion: =, !=, <, >, <=, >=, !<, !>
     Logicos: AND, OR, NOT
     Bitwise: &, |, ^, ~, <<, >>
 
 ORDER BY Clause:
     Se usa para ordenar los resultados de una consulta SQL en orden ascendente (ASC) o descendente (DESC).
+    Por defecto, el orden es ascendente.
     Sintaxis:
-    SELECT column1, column2 FROM table_name ORDER BY column1 ASC|DESC;
-    
+    SELECT column1, column2 FROM table_name ORDER BY column1 ASC|DESC, column2 ASC|DESC;
+
+Conexión a SQL:
+    ABRO MYSQL SHELL
+    \sql
+    \connect root@localhost:3306  (osioso123450)
+    control + c para salir para atras si le erro
+
+BETWEEN Operator:
+    Se usa para filtrar los resultados dentro de un rango especificado.
+    Sintaxis:
+    SELECT column1, column2 FROM table_name WHERE column1 BETWEEN value1 AND value2;
+
+LIKE Operator:
+    Se usa para buscar un patrón específico en una columna.
+    Sintaxis:
+    SELECT column1, column2 FROM table_name WHERE column1 LIKE pattern;
+    - % representa cero o más caracteres
+    - _ representa un solo carácter
+    Ejemplo real usando % y _:
+    SELECT * FROM Employees WHERE Name LIKE 'a%' AND City LIKE '_a%';
+    Ejemplos:
+    - 'a%' encuentra cualquier valor que comience con "a"
+    - '%a' encuentra cualquier valor que termine con "a"
+    - '%or%' encuentra cualquier valor que contenga "or"
+    - '_r%' encuentra cualquier valor con "r" en la segunda posición
+    - 'a_%_%' encuentra cualquier valor que comience con "a" y tenga al menos 3 caracteres
+
+EXISTS Operator:
+    Se usa para verificar la existencia de filas en una subconsulta.
+    Sintaxis:
+    SELECT column1, column2 FROM table_name WHERE EXISTS (subquery);
+    Ejemplo:
+    SELECT * FROM Employees E WHERE EXISTS (SELECT * FROM Orders O WHERE O.EmployeeID = E.EmployeeID);
+
+IN Operator:
+    Se usa para filtrar los resultados que coinciden con un conjunto específico de valores.
+    Sintaxis:
+    SELECT column1, column2 FROM table_name WHERE column1 IN (value1, value2, ...);
+    Ejemplo:
+    SELECT * FROM Employees WHERE Country IN ('USA', 'Canada', 'UK');
+
+IS NULL Operator:
+    Se usa para filtrar los resultados que tienen valores nulos en una columna.
+    Sintaxis:
+    SELECT column1, column2 FROM table_name WHERE column1 IS NULL;
+    Ejemplo:
+    SELECT * FROM Employees WHERE ManagerID IS NULL;
+
+SELECT DISTINCT:
+    Se usa para eliminar filas duplicadas en los resultados de una consulta SQL.
+    Sintaxis:
+    SELECT DISTINCT column1, column2 FROM table_name;
+    Ejemplo:
+    SELECT DISTINCT Country FROM Customers;
+
+DATABASE SCHEMA: Es una forma de organizar los objetos de una base de datos Depende de que base de datos uses.
+    MySQL: schema = base de datos. No hay diferencia práctica entre ambos; se usan como lo mismo.
+    PostgreSQL: un schema es como una carpeta dentro de una base de datos, que sirve para ordenar tablas y otros objetos.
+    Oracle: un schema está asociado a un usuario y contiene todos los objetos que ese usuario crea en la base de datos.
+
 
 """
