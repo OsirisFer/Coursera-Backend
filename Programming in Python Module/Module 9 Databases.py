@@ -46,6 +46,7 @@ DDL:
     1. CREATE TABLE table_name (
         column1 datatype(size) PRIMARY KEY,
         column2 datatype(size) NOT NULL DEFAULT 'default_value',
+        column3 FOREIGN KEY (column_name) REFERENCES other_table(other_column) ON DELETE CASCADE
         ...
     );
     2. DROP TABLE table_name;
@@ -149,5 +150,26 @@ DATABASE SCHEMA: Es una forma de organizar los objetos de una base de datos Depe
     PostgreSQL: un schema es como una carpeta dentro de una base de datos, que sirve para ordenar tablas y otros objetos.
     Oracle: un schema está asociado a un usuario y contiene todos los objetos que ese usuario crea en la base de datos.
 
+NORMALIZATION: 
+    Es el proceso de organizar los datos en una base de datos para reducir la redundancia y mejorar la integridad de los datos.
+    Basicamente abstraigo en cantidades cada vez más pequeñas hasta cumplir ciertas reglas (formas normales) evitando anomalías.
 
+    Anomalies son problemas que pueden surgir en una base de datos mal normalizada:
+    Insert anomalies: Ocurren cuando se insertan datos incompletos o inconsistentes en una tabla.
+    Update anomalies: Ocurren cuando se actualizan datos en una tabla y no se reflejan correctamente en todas las filas relacionadas.
+    Delete anomalies: Ocurren cuando se eliminan datos de una tabla y se pierden datos importantes relacionados.
+
+    Las formas normales (1NF, 2NF, 3NF, BCNF) son reglas que guían el proceso de normalización.
+    1NF: Elimina grupos repetitivos y asegura que cada campo contenga solo valores atómicos que no se repitan en ninguna tabla.
+    2NF: Asegura que todos los atributos no clave dependan completamente de la clave primaria. ej: Si una tabla tiene una clave primaria compuesta por dos columnas (A, B), y un atributo C depende solo de A, entonces C debe moverse a otra tabla.
+    3NF: Elimina dependencias transitivas, asegurando que los atributos no clave dependan solo de la clave primaria. Ej real sencillo: Si una tabla tiene atributos como "Ciudad" y "Código Postal", y "Código Postal" depende de "Ciudad", entonces "Código Postal" debe moverse a otra tabla para eliminar la dependencia transitiva.
+    BCNF: Una versión más estricta de la 3NF, asegurando que cada determinante sea una clave candidata.
+    “Si cambio un dato y tengo que tocar muchas filas, probablemente no esté bien normalizado”
+
+    Types of Dependencies:
+        Full Dependency: Ocurre cuando un atributo no clave depende completamente de la clave primaria.
+        Partial Dependency: Ocurre cuando un atributo no clave depende solo de una parte de una clave primaria
+        Transitive Dependency: Ocurre cuando un atributo no clave depende de otro atributo no clave.
+
+    
 """
