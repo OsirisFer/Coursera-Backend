@@ -28,6 +28,10 @@ DJANGO PROJECT STRUCTURE
         python3 manage.py runserver  (para iniciar el servidor de desarrollo de Django)
         django-admin startapp nombre_de_la_app  (para crear una nueva app dentro del proyecto)
 
+        Si ya esta creado el entorno virtual y el proyecto:
+        1) Primer paso ir al directorio del proyecto y activar el entorno virtual con .\tutorial-env\Scripts\Activate.ps1 
+        2) Luego ir al directorio del proyecto (donde esta manage.py) y correr python3 manage.py runserver
+
 DJANGO APP STRUCTURE
     MODELS.PY
         Archivo donde se definen las tablas de la base de datos. Cada modelo representa una tabla y sus atributos representan las columnas.
