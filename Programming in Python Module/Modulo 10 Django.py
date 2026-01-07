@@ -55,6 +55,34 @@ Las apps luego deben ser registradas en el archivo settings.py del proyecto para
         'demoapp',  # Nombre de la app registrada
     ]
 
+VIEW:
+    La view es una función o clase en views.py que recibe una solicitud web y devuelve una respuesta web. Django por defecto crea un archivo views.py en el proyecto.
+    En la app en el archivo views.py dentro de la app definimos una función que tome un objeto request como parámetro y retorne una respuesta HTTP:
+        from django.http import HttpResponse
+        def nombre_de_la_vista(request):
+            return HttpResponse("Hola, esta es mi primera vista en Django!")
+        
+    luego creamos un archivo urls.py dentro de la app para definir la ruta URL que apunta a esa vista:
+        from django.urls import path
+        from . import views
+
+        urlpatterns = [
+            path('mi-vista/', views.nombre_de_la_vista, name='mi_vista'),
+        ]
+    luego en el archivo urls.py del proyecto incluimos las URLs de la app:
+        
+        from django.contrib import admin
+        from django.urls import path, include
+        from nombre+ 
+
+        urlpatterns = [
+            path('admin/', admin.site.urls),
+            path('', include('nombre_de_la_app.urls')
+        ]
+    Entonces basicamente lo que pasa es que el flujo es:
+    El usuario llama a una URL -> el archivo urls.py del proyecto redirige a la urls.py de la app -> la urls.py de la app llama a la vista definida en views.py -> la vista procesa la solicitud y devuelve una respuesta HTTP al usuario.
+
+
     
 
 
