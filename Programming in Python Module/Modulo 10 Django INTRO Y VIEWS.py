@@ -73,7 +73,7 @@ VIEW:
         
         from django.contrib import admin
         from django.urls import path, include
-        from nombre+ 
+        from nombre_de_la_app import views
 
         urlpatterns = [
             path('admin/', admin.site.urls),
@@ -81,9 +81,83 @@ VIEW:
         ]
     Entonces basicamente lo que pasa es que el flujo es:
     El usuario llama a una URL -> el archivo urls.py del proyecto redirige a la urls.py de la app -> la urls.py de la app llama a la vista definida en views.py -> la vista procesa la solicitud y devuelve una respuesta HTTP al usuario.
+    La funcion que creamos es llamada por el usuario cuando el usuario ingresa a la url que django matchea despues con esa función internamente, ese codigo no lo veo
+
+    Basicamente la app funciona con request -> response
+    HttpRequest es lo que el usuario manda, es decir una request que puede ser un get (pidiendo datos), post (enviando datos), put(request para actualizar) o delete(request de que se borre algo).
+    A esa request se le devuelve un HttpResponse generalmente en forma de texto o html, es decir se le responde al usuario, enviando la respuesta al navegador
+
+PARAMETERS
+    Un parámetro es und ato que el cliente manda al servidor, existen 3 tipos
+        1) Path parameters (en la URL)
+        Django reconoce los parametros si estan entre <> son variables y se separan con /
+        /getuser/John/1
+        path('getuser/<name>/<id>', views.pathview)
 
 
-    
+        2) Query parameters (despues del ?)
+            Ej: /getuser/?name=John&id=1
+            Django no los define en urls.py, la vista los lee desde el request.get
+            def qryview(request):
+            name = request.GET['name']
+            id = request.GET['id']
+            return HttpResponse(f"Name:{name} UserID:{id}")
 
+        3) Body parameters 
+            No aparecen en la URL, viajan en el cuerpo del POST
+            <form action="/myapp/getform/" method="POST">
+                {% csrf_token %}
+                <input type="text" name="id">
+                <input type="text" name="name">
+                <input type="submit">
+            </form>
+
+Path Converters (Tipo de dato) sirven para validar y convertir el valor
+    <int:id> Django se asegura que sea un número si lo lo es da 404
+    Otros: str, slug, uuid, path
+
+NAMESPACES 
+    En Django, cada URL puede tener un nombre y opcionalmente pertenecer a un namespace, que identifica 
+    a qué aplicación pertenece esa URL y evita conflictos cuando varias apps tienen vistas con el mismo 
+    nombre. En lugar de escribir URLs reales a mano, Django permite referirse a ellas por su nombre usando reverse()
+    en las vistas o {% url %} en los templates, y automáticamente obtiene la ruta correcta. El namespace 
+    (definido con app_name en urls.py) asegura que Django sepa exactamente qué URL usar, y reverse actúa como un 
+    traductor que convierte el nombre de la URL en su path real, haciendo el código más claro, mantenible y seguro ante 
+    cambios en las rutas.
+
+ERRORES 
+    Códigos comunes:
+        200: correcto
+        404: no encontrado
+        403: prohibido
+        400: solicitud inválida
+        500: error interno
+
+    HttpResponse → respuesta normal Si algo sale mal, se devuelve o se lanza un error.
+    Django trae una clase específica para el error 404.
+        
+        HttpResponseNotFoun es como Http404, pero menos recomendado.
+        from django.http import HttpResponseNotFound
+        return HttpResponseNotFound("Page not found")
+                
+    Http404 → recurso no encontrado Es la forma recomendada, corta la ejecuciòn y muestra la pagina de error correspondiente
+        from django.http import Http404
+        raise Http404("Resource not found")
+
+    PermissionDenied → Se lanza cuando el usuario no tiene permiso.
+        from django.core.exceptions import PermissionDenied
+        def myview(request):
+            if not request.user.has_perm("app.view_model"):
+                raise PermissionDenied
+                
+    Excepciones → forma correcta de manejar errores
+    Usar excepciones, no if con textos de error
+        from django.http import Http404
+        def product_detail(request, id):
+        if id != 1:
+            raise Http404("Product not found")
+        return HttpResponse("Product found")
+
+    DEBUG=False → errores amigables en producción
 
 """
