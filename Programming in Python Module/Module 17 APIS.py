@@ -2,7 +2,6 @@
 
 URI / Endpoint
 - El endpoint define qué recurso expone el servidor.
-- Debe ser claro, predecible y consistente.
 
 Convenciones de nombres
 - Usar siempre minúsculas.
@@ -39,10 +38,7 @@ Incorrecto:
   /order
 
 Acciones → HTTP methods
-- GET: obtener
-- POST: crear
-- PUT / PATCH: actualizar
-- DELETE: eliminar
+- GET: obtener - POST: crear - PUT / PATCH: actualizar - DELETE: eliminar
 - Las acciones NO van en el nombre del endpoint.
 
 Evitar caracteres especiales
@@ -92,12 +88,8 @@ Resumen
 - Filtros y formatos con query params
 - Sin extensiones ni trailing slash
 
-
 Herramientas para probar APIs
-
-Objetivo
 - Permiten enviar requests HTTP y probar APIs sin escribir código.
-- Funcionan en Windows, macOS y Linux.
 
 curl (Command Line)
 - Herramienta para hacer requests HTTP desde la terminal.
@@ -108,8 +100,6 @@ GET:
 
 POST:
   curl -X POST -d "key=value" https://postman-echo.com/post
-
-- Útil para pruebas rápidas y scripting.
 
 Postman
 - Herramienta gráfica para probar y depurar APIs.
@@ -176,10 +166,9 @@ Caching
     GET /menu-items → respuesta cacheada
 
 Rate limiting
-- Limitar cantidad de requests por usuario/cliente.
+- Limitar cantidad de requests por usuario/cliente para prevenir abuso.
   Ej:
     requests por minuto / hora / día
-- Previene abuso del API.
 
 Monitoring
 - Monitorear:
@@ -239,8 +228,7 @@ CORS (Cross-Origin Resource Sharing)
 - Evita accesos no deseados desde otros orígenes.
 
 Firewalls
-- Restringen acceso por IP.
-- Permiten aceptar requests solo desde IPs autorizadas.
+- Restringen acceso por IP, permiten aceptar requests solo desde IPs autorizadas.
 
 Resumen
 - HTTPS obligatorio
@@ -398,6 +386,161 @@ Herramientas comunes
 - MockAPI:
   - Servicio para crear endpoints mock.
   - https://mockapi.io
+
+────────────────────────
+Instalar y configurar DRF en Windows (resumen ultra práctico)
+
+────────────────────────
+2) Instalar Django usando pipenv
+────────────────────────
+
+pipenv install django
+
+Qué hace:
+- Instala Django, crea un entorno virtual automáticamente, guarda la dependencia en Pipfile
+
+────────────────────────
+3) Activar el entorno virtual
+────────────────────────
+
+pipenv shell
+
+Qué hace:
+- Entra al entorno virtual, a partir de ahora todo corre aislado del sistema
+
+────────────────────────
+4) Crear proyecto Django
+────────────────────────
+
+django-admin startproject BookList
+
+Qué hace:
+- Crea la estructura base del proyecto Django
+
+────────────────────────
+5) Entrar al proyecto
+────────────────────────
+
+cd BookList
+
+Qué hace:
+- Se posiciona dentro de la carpeta del proyecto
+
+────────────────────────
+6) Crear una app Django
+────────────────────────
+
+python manage.py startapp BookListAPI
+
+Qué hace:
+- Crea una app donde va a vivir la API
+- Genera archivos como views.py, models.py, etc.
+
+────────────────────────
+7) Instalar Django Rest Framework
+────────────────────────
+
+pipenv install djangorestframework
+
+Qué hace:
+- Instala DRF dentro del entorno virtual
+- Permite crear APIs REST fácilmente
+
+────────────────────────
+8) Registrar DRF y la app
+────────────────────────
+
+Archivo: BookList/settings.py
+
+INSTALLED_APPS = [
+    ...
+    'rest_framework',   # habilita DRF
+    'BookListAPI',      # registra la app
+]
+
+Qué hace:
+- Activa DRF en el proyecto
+- Le dice a Django que use la app
+
+────────────────────────
+9) Crear primer endpoint
+────────────────────────
+
+Archivo: BookListAPI/views.py
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def books(request):
+    return Response({"message": "API funcionando"})
+
+Qué hace:
+- @api_view define qué métodos acepta
+- Response devuelve JSON automáticamente
+
+────────────────────────
+10) Crear urls de la app
+────────────────────────
+
+Archivo: BookListAPI/urls.py
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('books', views.books),
+]
+
+Qué hace:
+- Define la ruta /books dentro de la app
+
+────────────────────────
+11) Conectar URLs al proyecto
+────────────────────────
+
+Archivo: BookList/urls.py
+
+from django.urls import path, include
+
+urlpatterns = [
+    path('api/', include('BookListAPI.urls')),
+]
+
+Qué hace:
+- Expone la API bajo /api/
+
+────────────────────────
+12) Ejecutar el servidor
+────────────────────────
+
+python manage.py runserver
+
+Qué hace:
+- Levanta el servidor local de Django
+- Disponible en http://127.0.0.1:8000
+
+────────────────────────
+13) Probar el endpoint
+────────────────────────
+
+URL:
+http://127.0.0.1:8000/api/books
+
+Resultado:
+- JSON en pantalla
+- Browsable API de DRF
+
+────────────────────────
+Resumen clave
+────────────────────────
+- pipenv = entorno + dependencias
+- manage.py = comandos de Django
+- DRF = JSON + browsable API + menos código
+- @api_view controla métodos HTTP
+- Response reemplaza HttpResponse
+
+  
 
 API View Decorator (@api_view) – lo esencial
 
