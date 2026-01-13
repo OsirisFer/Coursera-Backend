@@ -453,4 +453,130 @@ Resumen ultra corto
 | CRUD común           | Generic Views |
 | CRUD grande          | ModelViewSet  |
 
+
+────────────────────────
+LAB: Book List con Django Rest Framework (con código ejemplo)
+────────────────────────
+
+Objetivo
+- Crear API de libros con DRF usando Serializers + Generic Views
+- Endpoints:
+  /api/books        (GET, POST)
+  /api/books/<id>   (GET, PUT)   [parte adicional]
+
+────────────────────────
+1) models.py (app BookListDRF)
+────────────────────────
+# BookListDRF/models.py
+from django.db import models
+
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.title} - {self.author}"
+
+Concepto: Modelo = tabla en DB
+
+────────────────────────
+2) serializers.py (crear archivo en la app)
+────────────────────────
+# BookListDRF/serializers.py
+from rest_framework import serializers
+from .models import Book
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ['id', 'title', 'author', 'price']
+
+Concepto: Serializer convierte Book ↔ JSON y valida datos
+
+────────────────────────
+3) views.py (Generic Views)
+────────────────────────
+# BookListDRF/views.py
+from rest_framework import generics
+from .models import Book
+from .serializers import BookSerializer
+
+class BookView(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+# (ADICIONAL) /api/books/<id>  -> GET + PUT
+class SingleBookView(generics.RetrieveUpdateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+Concepto:
+- ListCreateAPIView = GET lista + POST crea
+- RetrieveUpdateAPIView = GET uno + PUT actualiza
+- queryset + serializer_class = lo mínimo para que funcione
+
+────────────────────────
+4) urls.py (app-level) (crear archivo)
+────────────────────────
+# BookListDRF/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('books', views.BookView.as_view(), name='books'),
+    # (ADICIONAL)
+    path('books/<int:pk>', views.SingleBookView.as_view(), name='SingleBook'),
+]
+
+Concepto: rutas REST simples
+
+────────────────────────
+5) urls.py (project-level)
+────────────────────────
+# BookList/urls.py   (el proyecto)
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('BookListDRF.urls')),
+]
+
+Concepto: include() para enchufar las URLs de la app bajo /api/
+
+────────────────────────
+6) comandos que se ejecutan
+────────────────────────
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+
+URL:
+http://127.0.0.1:8000/api/books
+
+────────────────────────
+7) qué probás en el navegador (Browsable API)
+────────────────────────
+- GET  /api/books
+  → muestra lista de libros
+- POST /api/books
+  → desde el form, crear:
+    {"title":"The Prophet","author":"Kahlil Gibran","price":"4.35"}
+
+(ADICIONAL)
+- GET  /api/books/2
+- PUT  /api/books/2
+  payload ejemplo:
+    {"title":"Siddhartha","author":"Hermann Hesse","price":"9.10"}
+
+────────────────────────
+Conceptos DRF usados en este lab
+────────────────────────
+- ModelSerializer (BookSerializer)
+- Generic Views (ListCreateAPIView, RetrieveUpdateAPIView)
+- queryset / serializer_class
+- Browsable API (testing sin Postman/Insomnia)
+- HTTP methods: GET, POST, PUT
+
 """
